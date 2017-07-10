@@ -1,6 +1,6 @@
 {
   "name": "ologg",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Simple logger.",
   "main": "index.js",
   "scripts": {
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/sanchezal/ologg/issues"
   },
-  "homepage": "https://github.com/sanchezal/ologg#readme"
+  "homepage": "https://github.com/sanchezal/ologg#readme",
+  "dependencies": {
+    "fs-extra": "^3.0.1"
+  }
 }
