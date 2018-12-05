@@ -8,13 +8,14 @@ npm install ologg
 ```
 ## Getting started
 ```javascript
-const Ologg = require('ologg').ologg;
+const Ologg = require('ologg');
 const logg = new Ologg({
-   outputConsole: true, //Should entries be output to console.
-   singleFile: '/path/to/log/file', //If you want to output to a single file, set it here.
-   folder: '/path/to/folder', //Path to the folder that the logs will be saved. 
-                              //By default logs are separated by date.
-   includeTime: true //Should timestamp be added to entries.
+	outputFile: true, //Should entries be output to file.
+	outputConsole: true, //Should entries be output to console.
+	singleFile: '/path/to/log/file', //If you want to output to a single file, set it here.
+	folder: '/path/to/folder', //Path to the folder that the logs will be saved.
+										//By default logs are separated by date.
+	includeTime: true //Should timestamp be added to entries.
 })
 //If single file and folder are set, Ologg will use the single file.
 //Not all settings are required, but either singleFile or Folder are required.
@@ -67,6 +68,23 @@ This will output:
 
 [00:09:37][INFO]: test
 [00:09:37][INFO]: test
+```
+
+## Ologg.log(message, type, format)
+```javascript
+const logg = new Ologg({
+   folder: '/path/to/folder'
+});
+
+logg.log('Testing this', 'TEST');
+logg.log('Testing notype');
+logg.log('Testing haha', 'INFO', false);
+```
+This will output: 
+```
+[16:21:30][TEST]: Testing this
+[16:21:30]: Testing notype
+Testing haha
 ```
 
 ## Ologg.setOutputConsole(bool)

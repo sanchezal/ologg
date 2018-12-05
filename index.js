@@ -21,6 +21,7 @@ module.exports = class {
     * Gets the current log file.
     */
    getFile(){
+		if(!this.settings.outputFile)return false;
       if(this.settings.singleFile)return this.settings.singleFile;
       if(this.settings.folder){
 			var date = new Date();
@@ -72,11 +73,12 @@ module.exports = class {
 	 * @param {string} type The type of message. Ex. INFO
 	 * @param {boolean} format If the message should not be formatted
 	 */
-	log(message, type='INFO', format=true){
-		if(format) message = (this.settings.includeTime ? `[${this.getTime()}]` : '') + `[${type}]: ` + message;
+	log(message, type=false, format=true){
+		if(format) message = (this.settings.includeTime ? `[${this.getTime()}]` : '') + (type ? `[${type}]: ` : ': ') + message;
 		if(this.settings.outputConsole)console.log(message);
-      if(this.settings.folder){
-         var filePath = this.getFile();
+      if(this.settings.outputFile){
+			var filePath = this.getFile();
+			if(!filePath)return message;
          var logFile = fs.readFileSync(filePath);
          logFile += message + '\n';
          fs.writeFileSync(filePath, logFile);
