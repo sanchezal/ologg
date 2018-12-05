@@ -1,7 +1,7 @@
-const fs = require('fs-extra');
+const fs = require('fs');
 const path = require('path');
 
-exports.ologg = class {
+module.exports = class {
    /**
     * 
     * @param {Object} settings Settings for Ologg
@@ -9,9 +9,9 @@ exports.ologg = class {
     * @param {Boolean} settings.outputConsole Should Ologg output to console too.
     * @param {Boolean} settings.includeTime Should Ologg include the time on the log line.
     * @param {Boolean} settings.folder Folder that Ologg will output the log files.
+    * @param {Boolean} settings.outputFile Folder that Ologg will output the log files.
     */
    constructor(settings){
-      console.log(settings);
       this.settings = settings;
       this.settings.includeTime = (this.settings.includeTime ? this.settings.includeTime : true);
       this.getFile();
@@ -23,7 +23,8 @@ exports.ologg = class {
    getFile(){
       if(this.settings.singleFile)return this.settings.singleFile;
       if(this.settings.folder){
-         var date = new Date();
+			var date = new Date();
+			if(!fs.existsSync(this.settings.folder))fs.mkdirSync(this.settings.folder);
          var filePath = path.join(this.settings.folder, [
             date.getFullYear(), 
             date.getMonth()+1, 
@@ -36,7 +37,7 @@ exports.ologg = class {
          }
          return filePath;
       }else{
-         return null;
+         return false;
       }
    }
 
@@ -53,14 +54,7 @@ exports.ologg = class {
     * @param {string} message Message to log.
     */
    info(message){
-      message = (this.settings.includeTime ? `[${this.getTime()}]` : '') + '[INFO]: ' + message;
-      if(this.settings.outputConsole)console.log(message);
-      if(this.settings.folder){
-         var filePath = this.getFile();
-         var logFile = fs.readFileSync(filePath);
-         logFile += message + '\n';
-         fs.writeFileSync(filePath, logFile);
-      }
+      return this.log(message, 'INFO');
    }
    
    /**
@@ -68,15 +62,27 @@ exports.ologg = class {
     * @param {*} message Error message to log.
     */
    error(message){
-      message = (this.settings.includeTime ? `\n[${this.getTime()}]` : '') + '[ERROR]: ' + message + '\n';
-      if(this.settings.outputConsole)console.log(message);
+		message = (this.settings.includeTime ? `\n[${this.getTime()}]` : '') + '[ERROR]: ' + message + '\n';
+		return this.log(message, false, false);
+	}
+	
+	/**
+	 * Log a message
+	 * @param {string} message The message to log.
+	 * @param {string} type The type of message. Ex. INFO
+	 * @param {boolean} format If the message should not be formatted
+	 */
+	log(message, type='INFO', format=true){
+		if(format) message = (this.settings.includeTime ? `[${this.getTime()}]` : '') + `[${type}]: ` + message;
+		if(this.settings.outputConsole)console.log(message);
       if(this.settings.folder){
          var filePath = this.getFile();
          var logFile = fs.readFileSync(filePath);
          logFile += message + '\n';
          fs.writeFileSync(filePath, logFile);
-      }
-   }
+		}
+		return message;
+	}
 
    /**
     * Sets if messages should be output to console.

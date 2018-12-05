@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/sanchezal/ologg#readme",
   "dependencies": {
-    "fs-extra": "^3.0.1"
+  
   }
 }

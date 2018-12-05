@@ -1,9 +1,12 @@
-const ologg = require('./index.js').ologg;
+const Ologg = require('./index.js');
 const path = require('path');
 
-var logg = new ologg({
-   folder: path.join( __dirname, '..', 'logs'),
+var logg = new Ologg({
+   folder: path.join( __dirname, 'logs'),
 })
+
+logg.log('Hey man');
+logg.log('This is a test');
 
 logg.info('test');
 logg.info('test');
