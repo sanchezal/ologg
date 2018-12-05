@@ -14,7 +14,7 @@ const logg = new Ologg({
 	outputConsole: true, //Should entries be output to console.
 	singleFile: '/path/to/log/file', //If you want to output to a single file, set it here.
 	folder: '/path/to/folder', //Path to the folder that the logs will be saved.
-										//By default logs are separated by date.
+				//By default logs are separated by date.
 	includeTime: true //Should timestamp be added to entries.
 })
 //If single file and folder are set, Ologg will use the single file.
