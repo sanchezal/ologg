@@ -70,10 +70,6 @@ module.exports = class {
     * @param {*} message Error message to log.
     */
    error(...message){
-		// console.log
-		// message = (this.settings.includeTime ? `\n[${this.getTime()}]` : '') + '[ERROR]: ' + message + '\n';
-		// return this.log(message, false, false);
-
 		var msgs = []
 		msgs.push(this.log('\n', false, false));
 		for(var i of message){
