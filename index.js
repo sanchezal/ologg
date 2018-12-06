@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const pretty = require('prettyjson');
 
 module.exports = class {
    /**
@@ -13,7 +14,9 @@ module.exports = class {
     */
    constructor(settings){
       this.settings = settings;
-      this.settings.includeTime = (this.settings.includeTime ? this.settings.includeTime : true);
+		this.settings.includeTime = (this.settings.includeTime ? this.settings.includeTime : true);
+		this.settings.outputConsole = (this.settings.outputConsole ? this.settings.outputConsole : true);
+		this.settings.outputFile = (this.settings.outputFile ? this.settings.outputFile : true);
       this.getFile();
    }
 
@@ -54,17 +57,30 @@ module.exports = class {
     * Logs into the log file the give message.
     * @param {string} message Message to log.
     */
-   info(message){
-      return this.log(message, 'INFO');
+   info(...message){
+		var msgs = []
+		for(var i of message){
+			msgs.push(this.log(i, 'INFO'));
+		}
+      return msgs.length==1 ? msgs[0] : msgs;
    }
    
    /**
     * Logs into the log file an error message.
     * @param {*} message Error message to log.
     */
-   error(message){
-		message = (this.settings.includeTime ? `\n[${this.getTime()}]` : '') + '[ERROR]: ' + message + '\n';
-		return this.log(message, false, false);
+   error(...message){
+		// console.log
+		// message = (this.settings.includeTime ? `\n[${this.getTime()}]` : '') + '[ERROR]: ' + message + '\n';
+		// return this.log(message, false, false);
+
+		var msgs = []
+		msgs.push(this.log('\n', false, false));
+		for(var i of message){
+			msgs.push(this.log((this.settings.includeTime ? `[${this.getTime()}]` : '') + '[ERROR]: ' + this._formatMsg(i), false, false));
+		}
+		msgs.push(this.log('\n', false, false));
+      return msgs.length==1 ? msgs[0] : msgs;
 	}
 	
 	/**
@@ -74,13 +90,16 @@ module.exports = class {
 	 * @param {boolean} format If the message should not be formatted
 	 */
 	log(message, type=false, format=true){
-		if(format) message = (this.settings.includeTime ? `[${this.getTime()}]` : '') + (type ? `[${type}]: ` : ': ') + message;
-		if(this.settings.outputConsole)console.log(message);
+		var msg = message;
+		if(format){
+			msg = (this.settings.includeTime ? `[${this.getTime()}]` : '') + (type ? `[${type}]: ` : ': ') + this._formatMsg(message);
+		}
+		if(this.settings.outputConsole)console.log(msg);
       if(this.settings.outputFile){
 			var filePath = this.getFile();
-			if(!filePath)return message;
+			if(!filePath)return msg;
          var logFile = fs.readFileSync(filePath);
-         logFile += message + '\n';
+         logFile += msg + '\n';
          fs.writeFileSync(filePath, logFile);
 		}
 		return message;
@@ -100,5 +119,13 @@ module.exports = class {
     */
    setIncludeTime(should){
       this.settings.includeTime = should;
-   }
+	}
+	
+	_formatMsg(msg){
+		if(typeof msg === 'object'){
+			return '\n'+pretty.render(msg);
+		}else{
+			return msg;
+		}
+	}
 }

@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/sanchezal/ologg#readme",
   "dependencies": {
-  
+    "prettyjson": "^1.2.1"
   }
 }

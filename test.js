@@ -3,9 +3,14 @@ const path = require('path');
 
 var logg = new Ologg({
 	folder: path.join( __dirname, 'logs'),
-	outputFile: false
 })
 
-logg.log('Testing this', 'TEST');
-logg.log('Testing notype');
-logg.log('Testing haha', 'INFO', false);
+logg.info('test', 'lmao');
+logg.error('ERROR IN CONEKTA', {
+	test: 'haha test',
+	lol: {
+		asd: 'lmaso',
+		test: ['asd', 'asdmo', 'aosdmas'],
+		asdlm: { hah: 'jeje' }
+	}
+})
